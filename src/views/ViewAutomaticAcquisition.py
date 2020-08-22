@@ -1,10 +1,9 @@
 import sys
-sys.path.append('../src/controllers')
 from AutomaticAcquisition import *
 
-class viewAutomaticAcquisition():
+class ViewAutomaticAcquisition():
     def __init__(self, window):
-        super(viewAutomaticAcquisition).__init__()
+        super(ViewAutomaticAcquisition).__init__()
         self.window = window
         self.controllerAutoAcq = AutomaticAcquisition(self.window)
 

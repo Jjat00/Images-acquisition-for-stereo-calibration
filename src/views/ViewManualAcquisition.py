@@ -1,5 +1,4 @@
 import sys
-sys.path.append('../src/controllers')
 from ManualAcquisition import *
 
 class ViewManualAcquisition():

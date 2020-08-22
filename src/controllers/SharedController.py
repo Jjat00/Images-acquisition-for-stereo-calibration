@@ -1,5 +1,4 @@
 import sys
-sys.path.append('../src/models')
 from DataAcquisition import *
 
 class SharedController():

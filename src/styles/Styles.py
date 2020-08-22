@@ -1,43 +1,56 @@
 from PySide2 import *
+relativePathIcons = '../public/icons/'
 class Styles():
     def __init__(self, widget):
         super(Styles).__init__()
         self.widgetAcq = widget
-        self.theme()
+        self.theme1()
         self.setIcons()
         self.formStyle()
 
-    def theme(self):
+    def theme1(self):
         self.primaryColor = '#F44336'
         self.secondaryColor = '#263238'
         self.buttons = '#00E676'
-        self.others = '#212121'
+        self.frameCamera = '#212121'
         self.primaryText = '#212121'
         self.secondaryText = '#757575'
+        self.lineEdit = '#f5f5f5'
+        self.progressBar = '#CE93D8'
+
+    def theme2(self):
+        self.primaryColor = '#7f0000'
+        self.secondaryColor = '#ffffff'
+        self.buttons = '#b71c1c'
+        self.frameCamera = '#e0e0e0'
+        self.primaryText = '#212121'
+        self.secondaryText = '#000a12'
+        self.lineEdit = '#f5f5f5'
+        self.progressBar = '#ff795e'
 
     def setIcons(self):
         self.widgetAcq.window.onButton.setIcon(
-            QtGui.QPixmap("../public/icons/playCamera.png"))
+            QtGui.QPixmap(relativePathIcons+'playCamera.png'))
         self.widgetAcq.window.onButton.setIconSize(QtCore.QSize(30, 30))
 
         self.widgetAcq.window.offButton.setIcon(
-            QtGui.QPixmap("../public/icons/stop.png"))
+            QtGui.QPixmap(relativePathIcons+'stop.png'))
         self.widgetAcq.window.offButton.setIconSize(QtCore.QSize(20, 20))
 
         self.widgetAcq.window.captureButton.setIcon(
-            QtGui.QPixmap("../public/icons/capture.png"))
+            QtGui.QPixmap(relativePathIcons+'capture.png'))
         self.widgetAcq.window.captureButton.setIconSize(QtCore.QSize(25, 25))
 
         self.widgetAcq.window.saveButton.setIcon(
-            QtGui.QPixmap("../public/icons/storage.png"))
+            QtGui.QPixmap(relativePathIcons+'storage.png'))
         self.widgetAcq.window.saveButton.setIconSize(QtCore.QSize(25, 25))
 
         self.widgetAcq.window.startButton.setIcon(
-            QtGui.QPixmap("../public/icons/play.png"))
+            QtGui.QPixmap(relativePathIcons+'play.png'))
         self.widgetAcq.window.startButton.setIconSize(QtCore.QSize(25, 25))
 
         self.widgetAcq.window.stopButton.setIcon(
-            QtGui.QPixmap("../public/icons/stop.png"))
+            QtGui.QPixmap(relativePathIcons+'stop.png'))
         self.widgetAcq.window.stopButton.setIconSize(QtCore.QSize(20, 20))
 
     def formStyle(self):
@@ -62,17 +75,17 @@ class Styles():
                     margin-bottom: 10px;
                 }
                 QTabBar::tab:hover {
-                    color: """+self.primaryColor+""";
+                    color: """+self.secondaryColor+""";
                 }            
                 QTabBar::tab:selected {
                     background: """+self.primaryColor+""";
-                    Color: """+self.primaryText+""";
-                }
-                QTabBar::tab:!selected {
                     Color: """+self.secondaryColor+""";
                 }
+                QTabBar::tab:!selected {
+                    Color: """+self.primaryText+""";
+                }
                 QTabBar::tab:!selected:hover {
-                    Color: """+self.secondaryText+""";
+                    Color: """+self.secondaryColor+""";
                 }
                 QPushButton{
                     Background: """+self.buttons + """;
@@ -86,7 +99,7 @@ class Styles():
                     border-style: inset;
                 } 
                 QPushButton:hover {
-                    background-color: #B71C1C;
+                    background-color: """+self.primaryColor+""";
                     border-style: inset;
                 } 
                 QComboBox{
@@ -100,9 +113,9 @@ class Styles():
                     selection-background-color: lightgray;
                 }
                 QLineEdit { 
-                    Background: """+self.secondaryText + """;    
-                    color:  """+self.primaryText+""";
-                    border: 1px solid """+self.secondaryColor + """;    
+                    Background: """+self.lineEdit + """;    
+                    color:  """+self.secondaryText+""";
+                    border: 1px solid """+self.primaryColor + """;    
                     text-align: center;
                 }
                 QLabel {
@@ -115,10 +128,10 @@ class Styles():
                     border: none;
                 }
                 QProgressBar::chunk {
-                    color: #CE93D8;
-                    background: #CE93D8;
+                    color: """+self.progressBar+""";
+                    background: """+self.progressBar+""";
                     border: none;
-                }
+                }                
             """
         self.widgetAcq.setStyleSheet(styleWindow)
 
@@ -127,14 +140,14 @@ class Styles():
             background: """+self.primaryColor+""";
             font: bold, Ubuntu sans-serif;
             font-size: 13pt;
-            color: """+self.primaryText+""";
+            color: """+self.secondaryColor+""";
             min-width:200px;
             padding-bottom: 0;
         """
         self.widgetAcq.window.labelHeader.setStyleSheet(styleHeader)
 
         styleFrameCamera = """
-            background: """+self.others+""";
+            background: """+self.frameCamera+""";
         """
         self.widgetAcq.window.frameCameraM.setStyleSheet(styleFrameCamera)
         self.widgetAcq.window.frameCameraA.setStyleSheet(styleFrameCamera)

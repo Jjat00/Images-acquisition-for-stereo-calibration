@@ -1,6 +1,5 @@
 from PySide2 import  *
 import sys
-sys.path.append('../src/controllers')
 from ControllerAutoAcquisition import *
 
 class AutomaticAcquisition():
@@ -14,24 +13,27 @@ class AutomaticAcquisition():
         NoImages = int(self.window.NoImages.text())
         patternDimension = (int(self.window.cornerX.text()),
                             int(self.window.cornerY.text()))
-        pathImages = self.saveDialog()
-        self.controllerCamera.setConfigAutoAcq(
-            NoImages, patternDimension, pathImages)
+        self.pathImages = self.saveDialog()
+        if self.pathImages != '':
+            self.controllerCamera.setConfigAutoAcq(
+                NoImages, patternDimension, self.pathImages)
 
     def handlerStartRgbAndDepthImageAcq(self):
         self.whichCameras = 1
         self.configAdqcquisition()
-        rgbImage, depthImage = self.controllerCamera.turnOnCamera(0)
-        self.window.displayAuto.addWidget(rgbImage)
-        self.window.displayAuto.addWidget(depthImage)
+        if self.pathImages != '':
+            rgbImage, depthImage = self.controllerCamera.turnOnCamera(0)
+            self.window.displayAuto.addWidget(rgbImage)
+            self.window.displayAuto.addWidget(depthImage)
         #self.window.labelNoImage.setText(str(NoImage))
 
     def handlerStarRgbAndThermalImageAcq(self):
         self.whichCameras = 2
         self.configAdqcquisition()
-        rgbImage, themalImage = self.controllerCamera.turnOnCamera(1)
-        self.window.displayAuto.addWidget(rgbImage)
-        self.window.displayAuto.addWidget(themalImage)
+        if self.pathImages != '':
+            rgbImage, themalImage = self.controllerCamera.turnOnCamera(1)
+            self.window.displayAuto.addWidget(rgbImage)
+            self.window.displayAuto.addWidget(themalImage)
 
     def handlerStopAcquisition(self):
         self.controllerCamera.turnOffCamera()

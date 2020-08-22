@@ -1,18 +1,22 @@
 import sys
-sys.path.append('../src/styles')
-sys.path.append('../src/views')
+import os
+dirs = ['views','styles', 'controllers', 'models']
+for nameDir in dirs:
+    path = os.path.join(sys.path[0], nameDir)
+    sys.path.append(path)
+
 from Styles import *
 from ViewManualAcquisition import *
-from viewAutomaticAcquisition import *
+from ViewAutomaticAcquisition import *
 from PySide2 import *
 import cv2
 
-class DataAcquisitionWidget(QtWidgets.QWidget):
+class ExtrinsicAcquisitionWidget(QtWidgets.QWidget):
     def __init__(self, *args, **kwargs):
-        super(DataAcquisitionWidget, self).__init__(*args, **kwargs)
+        super(ExtrinsicAcquisitionWidget, self).__init__(*args, **kwargs)
         self.loadForm()
         self.initUI()
-        self.viewAutoAcquisition = viewAutomaticAcquisition(self.window)
+        self.viewAutoAcquisition = ViewAutomaticAcquisition(self.window)
         self.viewManualAcquisition = ViewManualAcquisition(self.window)
         Styles(self)
 
@@ -27,7 +31,8 @@ class DataAcquisitionWidget(QtWidgets.QWidget):
             self.automaticAcquisition)
 
     def loadForm(self):
-        file = QtCore.QFile("../src/views/dataAcquisition.ui")
+        formUI = os.path.join(sys.path[0], 'views/dataAcquisition.ui')
+        file = QtCore.QFile(formUI)
         file.open(QtCore.QFile.ReadOnly)
         loader = QtUiTools.QUiLoader()
         self.window = loader.load(file)
@@ -55,3 +60,8 @@ class DataAcquisitionWidget(QtWidgets.QWidget):
         if chosenCamera=="NONE":
             pass
 
+if __name__ == "__main__":
+    app = QtWidgets.QApplication([])
+    acquisitionExtrinsicCalibration = ExtrinsicAcquisitionWidget()
+    acquisitionExtrinsicCalibration.show()
+    app.exec_()

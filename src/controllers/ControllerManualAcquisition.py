@@ -1,6 +1,5 @@
 import sys
 from PySide2 import  *
-sys.path.append('../src/controllers')
 from SharedController import *
 
 class ControllerManualAcquisition():

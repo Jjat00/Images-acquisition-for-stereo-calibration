@@ -1,7 +1,6 @@
 import sys
 from PySide2 import *
 import time
-sys.path.append('../src/controllers')
 from SharedController import *
 
 class ControllerAutoAcquisition():
