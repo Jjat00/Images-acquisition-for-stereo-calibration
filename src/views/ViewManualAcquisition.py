@@ -1,6 +1,4 @@
-import sys
 from ManualAcquisition import *
-
 class ViewManualAcquisition():
     def __init__(self, window):
         super(ViewManualAcquisition).__init__()

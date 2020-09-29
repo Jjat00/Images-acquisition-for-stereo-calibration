@@ -1,4 +1,3 @@
-import sys
 from DataAcquisition import *
 
 class SharedController():

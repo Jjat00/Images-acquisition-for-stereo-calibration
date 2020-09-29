@@ -16,7 +16,7 @@ class Styles():
         self.primaryText = '#212121'
         self.secondaryText = '#757575'
         self.lineEdit = '#f5f5f5'
-        self.progressBar = '#CE93D8'
+        self.progressBar = '#ff795e'
 
     def theme2(self):
         self.primaryColor = '#7f0000'

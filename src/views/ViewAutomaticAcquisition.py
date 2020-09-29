@@ -1,4 +1,3 @@
-import sys
 from AutomaticAcquisition import *
 
 class ViewAutomaticAcquisition():

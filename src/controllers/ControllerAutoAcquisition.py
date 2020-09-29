@@ -1,6 +1,6 @@
-import sys
 from PySide2 import *
 import time
+import os
 from SharedController import *
 
 class ControllerAutoAcquisition():
@@ -26,7 +26,8 @@ class ControllerAutoAcquisition():
         if (whichCamera == 1):
             self.whichCamera = 1
             self.sharedController.initThermalCamera()
-
+        self.createDirs()
+        
     def turnOnCamera(self, whichCamera):
         self.chooseCamera(whichCamera)
         if (self.clicStart):
@@ -137,15 +138,27 @@ class ControllerAutoAcquisition():
             image2, self.patternDimension, self.corners2, self.findCorners2)
         return image1, image2
 
+    def createDirs(self):
+        os.mkdir(self.pathImages)
+        self.pathRgbImages = os.path.join(self.pathImages, 'rgb')
+        os.mkdir(self.pathRgbImages)
+        if self.whichCamera == 0:
+            self.pathDepthImages = os.path.join(self.pathImages, 'depth')
+            os.mkdir(self.pathDepthImages)
+        if self.whichCamera == 1:
+            self.pathThermalImages = os.path.join(self.pathImages, 'thermal')
+            os.mkdir(self.pathThermalImages)
+
     def saveImages(self, image1, image2):
-        nameImage1 = self.pathImages + 'Rgb' + \
+        nameImage1 = self.pathRgbImages + '/image' +\
             str(self.countNoImageAutoAcq)+'.png'
         cv2.imwrite(nameImage1, image1)
         if self.whichCamera == 0:
-            nameImage2 = self.pathImages+'Depth' + \
+            nameImage2 = self.pathDepthImages + '/image' +\
                 str(self.countNoImageAutoAcq)+'.png'
             cv2.imwrite(nameImage2, image2)
+            print(nameImage2)
         if self.whichCamera == 1:
-            nameImage2 = self.pathImages+'Thermal' + \
+            nameImage2 = self.pathThermalImages + \
                 str(self.countNoImageAutoAcq)+'.png'
             cv2.imwrite(nameImage2, image2)

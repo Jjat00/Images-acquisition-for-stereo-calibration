@@ -1,5 +1,4 @@
 from PySide2 import  *
-import sys
 from ControllerAutoAcquisition import *
 
 class AutomaticAcquisition():

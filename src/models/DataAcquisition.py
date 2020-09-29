@@ -11,9 +11,10 @@ class DataAcquisition():
                 return depthData
 
         def getDepthImage(self):
-                self.depthImage, _ = freenect.sync_get_depth()
-                self.depthImage = self.depthImage.astype(np.uint8)
-                self.depthImage = cv2.cvtColor(self.depthImage, cv2.COLOR_GRAY2BGR)
+                self.depthData, _ = freenect.sync_get_depth()
+                self.depthImage = self.depthData.astype(np.uint8)
+                self.depthImage = cv2.cvtColor(
+                    self.depthImage, cv2.COLOR_GRAY2BGR)
                 return self.depthImage
 
         def getRgbImage(self):
@@ -31,6 +32,7 @@ class DataAcquisition():
 
         def captureDepthImage(self):
                 self.depthImageCaptured = self.depthImage
+                self.depthDataCaptured = self.depthData
                 return self.depthImageCaptured
 
         def captureThermalImage(self):
@@ -41,6 +43,7 @@ class DataAcquisition():
                 cv2.imwrite(nameImage, self.rgbImageCaptured)
 
         def saveDepthImage(self, nameImage):
+                np.save(nameImage, self.depthDataCaptured)
                 cv2.imwrite(nameImage, self.depthImageCaptured)
 
         def saveThermalImage(self, nameImage):                
