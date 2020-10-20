@@ -1,16 +1,15 @@
 from PySide2 import QtCore, QtUiTools, QtWidgets
 import sys
 import os
-dirs = ['views','styles', 'controllers', 'models']
-for nameDir in dirs:
-    path = os.path.join(sys.path[0], nameDir)
-    sys.path.append(path)
 
-from Styles import *
+from Styles import Styles
 
 import cv2
 
 class ExtrinsicAcquisitionWidget(QtWidgets.QWidget):
+    """
+    Main QTWidget for extrinsic acquisition
+    """
     def __init__(self, *args, **kwargs):
         super(ExtrinsicAcquisitionWidget, self).__init__(*args, **kwargs)
         self.loadForm()
@@ -19,7 +18,7 @@ class ExtrinsicAcquisitionWidget(QtWidgets.QWidget):
 
     def initUI(self):
         self.setWindowTitle("Data Acquisition")
-        self.setGeometry(300, 100, 753, 460)
+        self.setGeometry(300, 100, 900, 540)
 
     def loadForm(self):
         formUI = os.path.join(sys.path[0], 'views/dataAcquisition.ui')

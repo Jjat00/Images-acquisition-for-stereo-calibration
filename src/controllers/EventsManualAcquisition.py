@@ -4,11 +4,15 @@ import cv2
 from DataAcquisition import DataAcquisition
 
 class EventsManualAcquisition():
+    """ 
+    Events for manual extrinsic acquisition 
+    """
+
     def __init__(self):
         super(EventsManualAcquisition).__init__()
         self.camera = DataAcquisition()
         self.viewCamera = QtWidgets.QGraphicsView()
-        self.scalaImage = 55
+        self.scalaImage = 65
         self.clicPlay = False
         self.clicCapture = False
         self.dimensionsCamera = np.array([640, 480])*(self.scalaImage/100)

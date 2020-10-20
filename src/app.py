@@ -1,5 +1,5 @@
 """
-Image Acquisition for Extrinsic Calibration
+Images Acquisition for Extrinsic Calibration
 Author: Jaimen Aza
 Email: userjjat00@gmail.com
 """

@@ -6,12 +6,16 @@ import os
 from DataAcquisition import DataAcquisition
 
 class EventsAutoAcquisition():
+    """
+    Events for automatic extrinsic acquisition 
+    """
+
     def __init__(self, window):
         super(EventsAutoAcquisition).__init__()
         self.window = window
         self.camera = DataAcquisition()
         self.countNoImageAutoAcq = 0
-        self.scalaImage = 55
+        self.scalaImage = 65
         self.clicStart = False
         self.dimensionsCamera = np.array([640, 480])*(self.scalaImage/100)
         self.criteria = (cv2.TERM_CRITERIA_EPS +

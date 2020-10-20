@@ -49,6 +49,9 @@ class MainController():
             self.connectButtonsRgb()
 
     def connectButtonsDepthCamera(self):
+        """
+        Connect buttons manual acquisition for depth camera
+        """
         self.window.onButton.clicked.connect(
             self.controllerManualAcq.handlerTurnOnDepthCamera)
         self.window.captureButton.clicked.connect(
@@ -59,6 +62,9 @@ class MainController():
             self.controllerManualAcq.handlerTurnOffCamera)
 
     def connectButtonsThermalCamera(self):
+        """
+        Connect buttons manual acquisition for thermal camera
+        """
         self.window.onButton.clicked.connect(
             self.controllerManualAcq.handlerTurnOnThermalCamera)
         self.window.captureButton.clicked.connect(
@@ -69,6 +75,9 @@ class MainController():
             self.controllerManualAcq.handlerTurnOffCamera)
 
     def connectButtonsRgb(self):
+        """
+        Connect buttons manual acquisition for rgb camera
+        """
         self.window.onButton.clicked.connect(
             self.controllerManualAcq.handlerTurnOnRGBCamera)
         self.window.captureButton.clicked.connect(
@@ -77,6 +86,9 @@ class MainController():
             self.controllerManualAcq.handlerTurnOffCamera)
 
     def disconnectButtons(self):
+        """
+        Disconnect buttons manual acquisition
+        """
         self.window.onButton.clicked.disconnect()
         self.window.captureButton.clicked.disconnect()
         self.window.saveButton.clicked.disconnect()
@@ -85,7 +97,7 @@ class MainController():
 
     def connectButtonsAutoAcq(self):
         """ 
-        Connect  and disconnect buttons manual acquisition tab and clean workspace every
+        Connect  and disconnect buttons automatic acquisition tab and clean workspace every
         time the camera is changed
         """
         self.controllerAutoAcq = ControllerAutoAcqTab(self.window)
@@ -98,6 +110,9 @@ class MainController():
             pass
 
     def connectButtonsRGbAndDepthCamera(self):
+        """
+        Connect buttons automatic acquisition for rgb and depth camera
+        """
         try:
             self.disconnectButtons()
             self.window.startButton.clicked.connect(
@@ -111,6 +126,9 @@ class MainController():
                 self.controllerAutoAcq.handlerStopAcquisition)
 
     def connectButtonsRgbAndThermalCamera(self):
+        """
+        Connect buttons automatic acquisition for rgb and thermal camera
+        """
         try:
             self.disconnectButtons()
             self.window.startButton.clicked.connect(
@@ -124,5 +142,8 @@ class MainController():
                 self.controllerAutoAcq.handlerStopAcquisition)
 
     def disconnectButtons(self):
+        """
+        Disconnect buttons automatic acquisition
+        """
         self.window.startButton.clicked.disconnect()
         self.window.stopButton.clicked.disconnect()
