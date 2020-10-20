@@ -1,12 +1,11 @@
-from PySide2 import  *
-from ControllerAutoAcquisition import *
+from PySide2 import QtWidgets
+from EventsAutoAcquisition import EventsAutoAcquisition
 
-class AutomaticAcquisition():
+class ControllerAutoAcqTab():
     def __init__(self, window):
-        super(AutomaticAcquisition).__init__()
+        super(ControllerAutoAcqTab).__init__()
         self.window = window
-        self.controllerCamera = ControllerAutoAcquisition(self.window)
-        self.whichCameras = 0
+        self.event = EventsAutoAcquisition(self.window)
 
     def configAdqcquisition(self):
         NoImages = int(self.window.NoImages.text())
@@ -14,28 +13,25 @@ class AutomaticAcquisition():
                             int(self.window.cornerY.text()))
         self.pathImages = self.saveDialog()
         if self.pathImages != '':
-            self.controllerCamera.setConfigAutoAcq(
+            self.event.setConfigAutoAcq(
                 NoImages, patternDimension, self.pathImages)
 
     def handlerStartRgbAndDepthImageAcq(self):
-        self.whichCameras = 1
         self.configAdqcquisition()
         if self.pathImages != '':
-            rgbImage, depthImage = self.controllerCamera.turnOnCamera(0)
+            rgbImage, depthImage = self.event.turnOnCamera('RGB-DEPTH')
             self.window.displayAuto.addWidget(rgbImage)
             self.window.displayAuto.addWidget(depthImage)
-        #self.window.labelNoImage.setText(str(NoImage))
 
     def handlerStarRgbAndThermalImageAcq(self):
-        self.whichCameras = 2
         self.configAdqcquisition()
         if self.pathImages != '':
-            rgbImage, themalImage = self.controllerCamera.turnOnCamera(1)
+            rgbImage, themalImage = self.event.turnOnCamera('RGB-THERMAL')
             self.window.displayAuto.addWidget(rgbImage)
             self.window.displayAuto.addWidget(themalImage)
 
     def handlerStopAcquisition(self):
-        self.controllerCamera.turnOffCamera()
+        self.event.turnOffCamera()
 
     def saveDialog(self):
         pathImages, info = QtWidgets.QFileDialog.getSaveFileName(

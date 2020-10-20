@@ -1,58 +1,57 @@
-from PySide2 import  *
-from ControllerManualAcquisition import *
+from PySide2 import QtWidgets
+from EventsManualAcquisition import EventsManualAcquisition
 
-class ManualAcquisition():
+class ControllerManualAcqTab():
     def __init__(self, window):
-        super(ManualAcquisition).__init__()
+        super(ControllerManualAcqTab).__init__()
         self.window = window
-        self.controllerCameraRgb = ControllerManualAcquisition()
-        self.controllerCameraDepth = ControllerManualAcquisition()
-        self.controllerCameraThermal = ControllerManualAcquisition()
-        self.whichCameras = 0
+        self.eventRgbCamera = EventsManualAcquisition()
+        self.eventDepthCamera = EventsManualAcquisition()
+        self.eventThermalCamera = EventsManualAcquisition()
 
     def handlerTurnOnRGBCamera(self):
-        rgbImage = self.controllerCameraRgb.turnOnCamera(0)
+        rgbImage = self.eventRgbCamera.turnOnCamera('RGB')
         self.window.displayManual.addWidget(rgbImage)
 
     def handlerTurnOnDepthCamera(self):
         self.whichCameras = 1
-        depthImage = self.controllerCameraDepth.turnOnCamera(1)
+        depthImage = self.eventDepthCamera.turnOnCamera('DEPTH')
         self.window.displayManual.addWidget(depthImage)
 
     def handlerTurnOnThermalCamera(self):
         self.whichCameras = 2
-        thermalImage = self.controllerCameraThermal.turnOnCamera(2)
+        thermalImage = self.eventThermalCamera.turnOnCamera('THERMAL')
         self.window.displayManual.addWidget(thermalImage)
 
     def handlerCaptureRGBImage(self):
-        rgbImage = self.controllerCameraRgb.captureImage(0)
+        rgbImage = self.eventRgbCamera.captureImage('RGB')
         self.window.displayManual.addWidget(rgbImage)
 
     def handlerCaptureDepthmage(self):
-        depthImage = self.controllerCameraDepth.captureImage(1)
+        depthImage = self.eventDepthCamera.captureImage('DEPTH')
         self.window.displayManual.addWidget(depthImage)
 
     def handlerCaptureThermalImage(self):
-        thermalImage = self.controllerCameraThermal.captureImage(2)
+        thermalImage = self.eventThermalCamera.captureImage('THERMAL')
         self.window.displayManual.addWidget(thermalImage)
         
     def handlerSaveRgbAndDepthImage(self):
         nameImage = self.saveDialog()
-        self.controllerCameraRgb.saveImage(0, nameImage+"Rgb.png")
-        self.controllerCameraDepth.saveImage(1, nameImage+"Depth.png")
+        self.eventRgbCamera.saveImage('RGB',"%sRgb.png" % nameImage)
+        self.eventDepthCamera.saveImage('DEPTH', "%sDepth.png" % nameImage)
 
     def handlerSaveRgbAndThermalImage(self):
         nameImage = self.saveDialog()
-        self.controllerCameraRgb.saveImage(0, nameImage+"Rgb.png")
-        self.controllerCameraThermal.saveImage(2, nameImage+"Depth.png")
+        self.eventRgbCamera.saveImage('RGB', "%sRgb.png" % nameImage)
+        self.eventThermalCamera.saveImage('THERMAL', "%sThermal.png" % nameImage)
 
     def handlerTurnOffCamera(self):
         if self.whichCameras == 1:
-            self.controllerCameraRgb.turnOffCamera()
-            self.controllerCameraDepth.turnOffCamera()
+            self.eventRgbCamera.turnOffCamera()
+            self.eventDepthCamera.turnOffCamera()
         if self.whichCameras == 2:
-            self.controllerCameraRgb.turnOffCamera()
-            self.controllerCameraThermal.turnOffCamera()
+            self.eventRgbCamera.turnOffCamera()
+            self.eventThermalCamera.turnOffCamera()
 
 
     def handlerNone(self):

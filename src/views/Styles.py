@@ -1,5 +1,6 @@
-from PySide2 import *
+from PySide2 import QtGui, QtCore
 relativePathIcons = '../public/icons/'
+
 class Styles():
     def __init__(self, widget):
         super(Styles).__init__()

@@ -1,13 +1,15 @@
-from PySide2 import *
+from PySide2 import QtCore, QtWidgets, QtGui
+import numpy as np
+import cv2
 import time
 import os
-from SharedController import *
+from DataAcquisition import DataAcquisition
 
-class ControllerAutoAcquisition():
+class EventsAutoAcquisition():
     def __init__(self, window):
-        super(ControllerAutoAcquisition).__init__()
+        super(EventsAutoAcquisition).__init__()
         self.window = window
-        self.sharedController = SharedController()
+        self.camera = DataAcquisition()
         self.countNoImageAutoAcq = 0
         self.scalaImage = 55
         self.clicStart = False
@@ -21,11 +23,11 @@ class ControllerAutoAcquisition():
         self.pathImages = pathImages
 
     def chooseCamera(self, whichCamera):
-        if (whichCamera == 0):
-            self.whichCamera = 0
-        if (whichCamera == 1):
-            self.whichCamera = 1
-            self.sharedController.initThermalCamera()
+        if (whichCamera == 'RGB-DEPTH'):
+            self.whichCamera = 'RGB-DEPTH'
+        if (whichCamera == 'RGB-THERMAL'):
+            self.whichCamera = 'RGB-THERMAL'
+            self.camera.initThermalCamera()
         self.createDirs()
         
     def turnOnCamera(self, whichCamera):
@@ -81,19 +83,19 @@ class ControllerAutoAcquisition():
 
     def getFrameDrawPattern(self):
         if self.countNoImageAutoAcq < self.NoImagesAutoAcq:
-            if (self.whichCamera == 0):
+            if (self.whichCamera == 'RGB-DEPTH'):
                 frameCamera1, frameCamera2 = self.detectPattern(
-                    self.sharedController.getFrame(0), self.sharedController.getFrame(1))
-            if (self.whichCamera == 1):
+                    self.camera.getRgbImage(), self.camera.getDepthImage())
+            if (self.whichCamera == 'RGB-THERMAL'):
                 frameCamera1, frameCamera2 = self.detectPattern(
-                    self.sharedController.getFrame(0), self.sharedController.getFrame(2))
+                    self.camera.getRgbImage(), self.camera.getThermalImage())
             self.pixMapCamera1(frameCamera1)
             self.pixMapCamera2(frameCamera2)
         else:
             self.timerCameras.stop()
 
     def pixMapCamera1(self, frameCamera1):
-        frameCamera1 = self.sharedController.imageResize(
+        frameCamera1 = self.imageResize(
             frameCamera1, self.scalaImage)
         imageCamera1 = QtGui.QImage(
             frameCamera1, *self.dimensionsCamera, QtGui.QImage.Format_RGB888).rgbSwapped()
@@ -101,7 +103,7 @@ class ControllerAutoAcquisition():
         self.imagePixmapItem1.setPixmap(self.imagePixmap1)
 
     def pixMapCamera2(self, frameCamera2):
-        frameCamera2 = self.sharedController.imageResize(
+        frameCamera2 = self.imageResize(
             frameCamera2, self.scalaImage)
         imageCamera2 = QtGui.QImage(
             frameCamera2, *self.dimensionsCamera, QtGui.QImage.Format_RGB888).rgbSwapped()
@@ -142,23 +144,37 @@ class ControllerAutoAcquisition():
         os.mkdir(self.pathImages)
         self.pathRgbImages = os.path.join(self.pathImages, 'rgb')
         os.mkdir(self.pathRgbImages)
-        if self.whichCamera == 0:
+
+        if self.whichCamera == 'RGB-DEPTH':
             self.pathDepthImages = os.path.join(self.pathImages, 'depth')
             os.mkdir(self.pathDepthImages)
-        if self.whichCamera == 1:
+
+        if self.whichCamera == 'RGB-THERMAL':
             self.pathThermalImages = os.path.join(self.pathImages, 'thermal')
             os.mkdir(self.pathThermalImages)
 
     def saveImages(self, image1, image2):
-        nameImage1 = self.pathRgbImages + '/image' +\
-            str(self.countNoImageAutoAcq)+'.png'
+        nameImage1 = "%s%s%i%s" % (
+            self.pathRgbImages,'/image', self.countNoImageAutoAcq, '.png')
         cv2.imwrite(nameImage1, image1)
-        if self.whichCamera == 0:
-            nameImage2 = self.pathDepthImages + '/image' +\
-                str(self.countNoImageAutoAcq)+'.png'
+
+        if self.whichCamera == 'RGB-DEPTH':
+            nameImage2 = "%s%s%i%s" % (
+                self.pathDepthImages, '/image', self.countNoImageAutoAcq, '.png')
             cv2.imwrite(nameImage2, image2)
-            print(nameImage2)
-        if self.whichCamera == 1:
+            
+        if self.whichCamera == 'RGB-THERMAL':
             nameImage2 = self.pathThermalImages + \
                 str(self.countNoImageAutoAcq)+'.png'
             cv2.imwrite(nameImage2, image2)
+
+    def imageResize(self, pathImage, scalePercent):
+        if (isinstance(pathImage, str)):
+            image = cv2.imread(pathImage, cv2.IMREAD_UNCHANGED)
+        else:
+            image = pathImage
+        width = int(image.shape[1] * scalePercent / 100)
+        height = int(image.shape[0] * scalePercent / 100)
+        dim = (width, height)
+        resized = cv2.resize(image, dim, interpolation=cv2.INTER_AREA)
+        return resized

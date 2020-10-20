@@ -1,10 +1,12 @@
-from PySide2 import  *
-from SharedController import *
+from PySide2 import QtWidgets, QtGui, QtCore
+import numpy as np
+import cv2
+from DataAcquisition import DataAcquisition
 
-class ControllerManualAcquisition():
+class EventsManualAcquisition():
     def __init__(self):
-        super(ControllerManualAcquisition).__init__()
-        self.sharedController = SharedController()
+        super(EventsManualAcquisition).__init__()
+        self.camera = DataAcquisition()
         self.viewCamera = QtWidgets.QGraphicsView()
         self.scalaImage = 55
         self.clicPlay = False
@@ -12,13 +14,13 @@ class ControllerManualAcquisition():
         self.dimensionsCamera = np.array([640, 480])*(self.scalaImage/100)
 
     def chooseCamera(self, whichCamera):
-        if (whichCamera == 0):
-            self.whichCamera = 0
-        if (whichCamera == 1):
-            self.whichCamera = 1
-        if (whichCamera == 2):
-            self.sharedController.initThermalCamera()
-            self.whichCamera = 2
+        if (whichCamera == 'RGB'):
+            self.whichCamera = 'RGB'
+        if (whichCamera == 'DEPTH'):
+            self.whichCamera = 'DEPTH'
+        if (whichCamera == 'THERMAL'):
+            self.camera.initThermalCamera()
+            self.whichCamera = 'THERMAL'
 
     def turnOnCamera(self, whichCamera):
         self.chooseCamera(whichCamera)
@@ -30,13 +32,23 @@ class ControllerManualAcquisition():
 
     def captureImage(self, whichCamera):
         self.turnOffCamera()
-        frameImage = self.sharedController.captureFrame(whichCamera)
+        if (whichCamera == 'RGB'):
+            frameImage = self.camera.captureRgbImage()
+        if (whichCamera == 'DEPTH'):
+            frameImage = self.camera.captureDepthImage()
+        if (whichCamera == 'THERMAL'):
+            frameImage = self.camera.captureThermalImage()
         self.imageToQtWidget(frameImage)
         self.clicCapture = True
         return self.viewCamera
 
     def saveImage(self, whichCamera, nameImage):
-        self.sharedController.saveImage(whichCamera, nameImage)
+        if whichCamera == 'RGB':
+            self.camera.saveRgbImage(nameImage)
+        if whichCamera == 'DEPTH':
+            self.camera.saveDepthImage(nameImage)
+        if whichCamera == 'THERMAL':
+            self.camera.saveThermalImage(nameImage)
 
     def turnOffCamera(self):
         if (self.clicPlay or self.clicCapture):
@@ -57,19 +69,19 @@ class ControllerManualAcquisition():
         self.viewCamera.setScene(scene)
         
     def getFrame(self):
-        if (self.whichCamera == 0):
-            frame = self.sharedController.getFrame(0)
-        if (self.whichCamera == 1):
-            frame = self.sharedController.getFrame(1)
-        if (self.whichCamera == 2):
-            frame = self.sharedController.getFrame(2)
-        frame = self.sharedController.imageResize(frame, self.scalaImage)
+        if (self.whichCamera == 'RGB'):
+            frame = self.camera.getRgbImage()
+        if (self.whichCamera == 'DEPTH'):
+            frame = self.camera.getDepthImage()
+        if (self.whichCamera == 'THERMAL'):
+            frame = self.camera.getThermalImage()
+        frame = self.imageResize(frame, self.scalaImage)
         image = QtGui.QImage(frame, *self.dimensionsCamera,QtGui.QImage.Format_RGB888).rgbSwapped()
         self.imagePixmap = QtGui.QPixmap.fromImage(image)
         self.imagePixmapItem.setPixmap(self.imagePixmap)
 
     def imageToQtWidget(self, frame):
-        frame = self.sharedController.imageResize(frame, self.scalaImage)
+        frame = self.imageResize(frame, self.scalaImage)
         image = QtGui.QImage(frame, *self.dimensionsCamera, QtGui.QImage.Format_RGB888).rgbSwapped()
         imagePixmap = QtGui.QPixmap.fromImage(image)
         imageScene = QtWidgets.QGraphicsScene()
@@ -79,3 +91,13 @@ class ControllerManualAcquisition():
         self.viewCamera = QtWidgets.QGraphicsView()
         self.viewCamera.setScene(imageScene)
 
+    def imageResize(self, pathImage, scalePercent):
+        if (isinstance(pathImage, str)):
+            image = cv2.imread(pathImage, cv2.IMREAD_UNCHANGED)
+        else:
+            image = pathImage
+        width = int(image.shape[1] * scalePercent / 100)
+        height = int(image.shape[0] * scalePercent / 100)
+        dim = (width, height)
+        resized = cv2.resize(image, dim, interpolation=cv2.INTER_AREA)
+        return resized
